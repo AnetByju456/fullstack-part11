@@ -36,8 +36,11 @@ module.exports = [
     },
   },
   {
-    files: ["src/**/*.{js,jsx}", "test/**/*.{js,jsx}"],
-    plugins: {
+files: [
+  'src/**/*.{js,jsx}',
+  'test/**/*.{js,jsx}',
+  'e2e-tests/**/*.js'
+],    plugins: {
       react,
       jest,
     },
@@ -53,7 +56,9 @@ module.exports = [
         ...globals.browser,
         ...globals.es6,
         ...globals.jest,
-      },
+        ...globals.node,
+}
+      
     },
     settings: {
       react: {
