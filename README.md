@@ -27,4 +27,3 @@ Available commands:
 
 ## Testing
 Exercise 13: Testing pull request workflow.
-testing skip delpoyment
