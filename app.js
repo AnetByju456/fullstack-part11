@@ -12,7 +12,7 @@ app.get('/health', (req, res) => {
 
 const start = async () => {
   await app.listen(PORT)
-  console.log(`server started on port ${PORT}`)
+  console.log(`Server listening on port ${PORT}`)
 }
 
 start()
