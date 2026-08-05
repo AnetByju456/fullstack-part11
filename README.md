@@ -24,3 +24,6 @@ Available commands:
 - `npm run eslint` – Run ESLint.
 - `npm run build` – Create a production build.
 - `npm run start-prod` – Serve the production build.
+
+## Testing
+Exercise 13: Testing pull request workflow.
