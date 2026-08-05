@@ -1,13 +1,26 @@
-# Full Stack open CI/CD
+# Full Stack Open CI/CD
 
-This repository is used for the CI/CD module of the Full Stack Open course
+This repository is used for the CI/CD module of the Full Stack Open course.
+
+## Live Application
+
+The application is deployed on Render and can be accessed here:
+
+https://anet-pokedex.onrender.com
 
 ## Commands
 
-Start by running `npm install` inside the project folder
+Start by running:
 
-`npm start` to run the webpack dev server
-`npm test` to run tests
-`npm run eslint` to run eslint
-`npm run build` to make a production build
-`npm run start-prod` to run your production build
+```bash
+npm install
+```
+
+Available commands:
+
+- `npm start` – Run the webpack development server.
+- `npm test` – Run the Jest test suite.
+- `npm run test:e2e` – Run the Playwright end-to-end tests.
+- `npm run eslint` – Run ESLint.
+- `npm run build` – Create a production build.
+- `npm run start-prod` – Serve the production build.
