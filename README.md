@@ -26,4 +26,5 @@ Available commands:
 - `npm run start-prod` – Serve the production build.
 
 ## Testing
+
 Exercise 13: Testing pull request workflow.
