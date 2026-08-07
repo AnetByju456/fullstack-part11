@@ -56,7 +56,7 @@ jobs:
           status: success
 
   notify_failure:
-    needs: [build_and_test]
+    needs: [deploy]
     runs-on: ubuntu-latest
 
     if: ${{ failure() }}
