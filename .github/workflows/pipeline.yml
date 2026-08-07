@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple_deployment_pipeline:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -31,19 +31,38 @@ jobs:
       - name: Run Playwright tests
         run: npm run test:e2e
 
+  deploy:
+    needs: [build_and_test]
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+
+    steps:
       - name: Trigger deployment
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
 
+
+  notify_success:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+
+    if: ${{ success() && github.event_name == 'push' }}
+
+    steps:
       - name: Discord Success Notification
-        if: ${{ success() && github.event_name == 'push' }}
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: success
 
+  notify_failure:
+    needs: [build_and_test]
+    runs-on: ubuntu-latest
+
+    if: ${{ failure() }}
+
+    steps:
       - name: Discord Failure Notification
-        if: ${{ failure() }}
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
@@ -53,9 +72,12 @@ jobs:
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref_name }}
             Commit: ${{ github.sha }}
-            Message: ${{ github.event.pull_request.title || github.event.head_commit.message }}            Author: ${{ github.actor }}
+            Message: ${{ github.event.head_commit.message }}
+            Author: ${{ github.actor }}        
+  
+
   tag_release:
-    needs: [simple_deployment_pipeline]
+    needs: [deploy]
     runs-on: ubuntu-latest
 
     steps:
