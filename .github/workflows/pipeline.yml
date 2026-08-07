@@ -62,7 +62,7 @@ jobs:
             Author: ${{ github.actor }}
 
   notify_success:
-    needs: [tag_release]
+    needs: [deploy]
     runs-on: ubuntu-latest
 
     if: ${{ success() && github.event_name == 'push' }}
