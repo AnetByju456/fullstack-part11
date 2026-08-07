@@ -16,5 +16,3 @@ const start = async () => {
 }
 
 start()
-
-this will break
