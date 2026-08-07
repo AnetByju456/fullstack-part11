@@ -64,9 +64,9 @@ jobs:
           status: success
 
   tag_release:
-    needs: [deploy, notify_success]
+    needs: [deploy]
     runs-on: ubuntu-latest
-    if: ${{ !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     steps:
       - uses: actions/checkout@v6
       - name: Bump version and push tag
