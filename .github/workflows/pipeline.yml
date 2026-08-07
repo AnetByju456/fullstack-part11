@@ -64,7 +64,7 @@ jobs:
           status: success
 
   tag_release:
-    needs: [notify_success]
+    needs: [deploy]
     runs-on: ubuntu-latest
     if: ${{ !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     steps:
