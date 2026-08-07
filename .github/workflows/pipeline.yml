@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize]
 
 jobs:
   build_and_test:
@@ -22,21 +19,17 @@ jobs:
         run: npm run eslint
       - name: Run npm test
         run: npm test
-
       - name: Run npm build
         run: npm run build
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-
       - name: Run Playwright tests
         run: npm run test:e2e
 
   deploy:
     needs: [build_and_test]
     runs-on: ubuntu-latest
-
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
-
     steps:
       - name: Trigger deployment
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
@@ -44,9 +37,7 @@ jobs:
   notify_failure:
     needs: [deploy]
     runs-on: ubuntu-latest
-
-    if: ${{ failure() }}
-
+    if: ${{ always() && needs.deploy.result == 'failure' }}
     steps:
       - name: Discord Failure Notification
         uses: sarisia/actions-status-discord@v1
@@ -64,28 +55,22 @@ jobs:
   notify_success:
     needs: [deploy]
     runs-on: ubuntu-latest
-
-    if: ${{ success() && github.event_name == 'push' }}
-
+    if: ${{ needs.deploy.result == 'success' }}
     steps:
       - name: Discord Success Notification
         uses: sarisia/actions-status-discord@v1
         with:
-         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-         status: success
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: success
 
-            
   tag_release:
     needs: [deploy]
     runs-on: ubuntu-latest
-
+    if: ${{ needs.deploy.result == 'success' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
     steps:
       - uses: actions/checkout@v6
-
       - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-
