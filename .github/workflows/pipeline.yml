@@ -41,7 +41,7 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: success
   notify_failure:
-    needs: [deploy]
+    needs: [build_and_test,deploy]
     runs-on: ubuntu-latest
     if: ${{ always() && needs.deploy.result == 'failure' }}
     steps:
